@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database.session import engine, Base
 
-from app.models.incident import incident
+from app.models.incident import Incident
 
 
 from app.routes.incident import router as incident_router
