@@ -1,15 +1,23 @@
 from sqlalchemy import Column, String, Text, DateTime
 from sqlalchemy.dialects.postgresql import UUID
-import uuid
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
-from app.database.connection import Base
+import uuid
+
+from app.database.session import Base
 
 
 class Incident(Base):
+
     __tablename__ = "incidents"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4
+    )
 
     title = Column(String, nullable=False)
 
@@ -23,8 +31,20 @@ class Incident(Base):
 
     workaround = Column(Text)
 
-    started_at = Column(DateTime, default=datetime.utcnow)
+    started_at = Column(
+        DateTime,
+        default=datetime.utcnow
+    )
 
     resolved_at = Column(DateTime)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow
+    )
+
+    updates = relationship(
+        "IncidentUpdate",
+        backref="incident",
+        cascade="all, delete"
+    )
