@@ -15,7 +15,7 @@ export default function LoginPage() {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/auth/login",
+        "https://samai-status-production.up.railway.app/auth/login",
         {
           method: "POST",
 

@@ -43,7 +43,7 @@ export default function AdminPage() {
     }
 
     const response = await fetch(
-      "http://127.0.0.1:8000/incidents/"
+      ""https://samai-status-production.up.railway.app/incidents/""
     );
 
     const incidentsData = await response.json();
@@ -53,7 +53,7 @@ export default function AdminPage() {
       incidentsData.map(async (incident: any) => {
 
         const updatesResponse = await fetch(
-          `http://127.0.0.1:8000/incidents/${incident.id}/updates`
+          `"https://samai-status-production.up.railway.app/incidents/"/incidents/${incident.id}/updates`
         );
 
         const updates = await updatesResponse.json();
@@ -89,7 +89,7 @@ export default function AdminPage() {
     );
 
     const response = await fetch(
-      "http://127.0.0.1:8000/incidents/",
+      ""https://samai-status-production.up.railway.app/incidents/"",
       {
         method: "POST",
 
@@ -131,7 +131,7 @@ export default function AdminPage() {
     );
 
     const response = await fetch(
-      `http://127.0.0.1:8000/incidents/${id}/resolve`,
+      `"https://samai-status-production.up.railway.app/incidents/"/incidents/${id}/resolve`,
       {
         method: "PUT",
 
@@ -160,7 +160,7 @@ export default function AdminPage() {
     );
 
     const response = await fetch(
-      `http://127.0.0.1:8000/incidents/${id}/updates`,
+      `"https://samai-status-production.up.railway.app/incidents/"/incidents/${id}/updates`,
       {
         method: "POST",
 
