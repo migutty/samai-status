@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database.session import engine
-from app.database.session import Base
+from app.database.session import engine, Base
 
 from app.models.incident import Incident
 from app.models.timeline import Timeline
@@ -10,7 +9,10 @@ from app.models.timeline import Timeline
 from app.routes.incident import router as incident_router
 from app.routes.auth import router as auth_router
 
-app = FastAPI()
+app = FastAPI(
+    title="SAMAI Status API",
+    version="1.0.0"
+)
 
 Base.metadata.create_all(bind=engine)
 
