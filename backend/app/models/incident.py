@@ -38,6 +38,8 @@ class Incident(Base):
 
     resolved_at = Column(DateTime)
 
+    estimated_resolution = Column(DateTime)
+
     created_at = Column(
         DateTime,
         default=datetime.utcnow
