@@ -4,8 +4,10 @@ from sqlalchemy import String
 from uuid import UUID
 
 
+
 from app.database.session import get_db
 from app.models.incident import Incident
+from app.auth.security import verify_token
 from app.schemas.incident import (
     IncidentCreate,
     IncidentResponse
@@ -20,22 +22,24 @@ router = APIRouter(
 @router.post("/", response_model=IncidentResponse)
 def create_incident(
     incident: IncidentCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: str = Depends(verify_token)
 ):
-    new_incident = Incident(
-        title=incident.title,
-        incident_type=incident.incident_type,
-        description=incident.description,
-        severity=incident.severity,
-        status=incident.status,
-        workaround=incident.workaround
-    )
+    incident = Incident(
+    title=data.title,
+    incident_type=data.incident_type,
+    description=data.description,
+    severity=data.severity,
+    status=data.status,
+    workaround=data.workaround,
+    estimated_resolution=data.estimated_resolution
+)
 
-    db.add(new_incident)
-    db.commit()
-    db.refresh(new_incident)
+db.add(incident)
+db.commit()
+db.refresh(incident)
 
-    return new_incident
+return incident
 
 
 @router.get("/", response_model=list[IncidentResponse])
@@ -49,7 +53,8 @@ def get_incidents(
 @router.put("/{incident_id}/resolve")
 def resolve_incident(
     incident_id: UUID,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: str = Depends(verify_token)
 ):
     incident = db.query(Incident).filter(
     Incident.id.cast(String) == str(incident_id)
