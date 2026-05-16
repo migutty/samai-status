@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database.session import engine, Base
 
 from app.models.incident import Incident
-from app.models.timeline import Timeline
+
 
 from app.routes.incident import router as incident_router
 from app.routes.auth import router as auth_router
