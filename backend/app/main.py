@@ -12,7 +12,7 @@ app = FastAPI(
     title="SAMAI Status API",
     version="1.0.0"
 )
-
+Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
