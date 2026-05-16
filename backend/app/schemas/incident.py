@@ -10,6 +10,7 @@ from app.schemas.incident_update import (
 
 
 class IncidentCreate(BaseModel):
+
     title: str
     incident_type: str
     description: str
@@ -22,13 +23,20 @@ class IncidentCreate(BaseModel):
 class IncidentResponse(BaseModel):
 
     id: UUID
+
     title: str
+
     incident_type: str
+
     description: str
+
     severity: str
+
     status: str
-    workaround: str | None
-    estimated_resolution: datetime | None
+
+    workaround: str | None = None
+
+    estimated_resolution: datetime | None = None
 
     updates: list[IncidentUpdateResponse] = []
 

@@ -2,18 +2,6 @@
 
 import toast from "react-hot-toast";
 
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -188,48 +176,6 @@ export default function AdminPage() {
     fetchIncidents();
   }
 
-  const activeIncidents = incidents.filter(
-    (incident: any) =>
-      incident.status !== "RESOLVED"
-  );
-
-  const resolvedIncidents = incidents.filter(
-    (incident: any) =>
-      incident.status === "RESOLVED"
-  );
-
-  const severityData = [
-    {
-      name: "HIGH",
-      value: incidents.filter(
-        (i: any) => i.severity === "HIGH"
-      ).length,
-    },
-    {
-      name: "MEDIUM",
-      value: incidents.filter(
-        (i: any) => i.severity === "MEDIUM"
-      ).length,
-    },
-    {
-      name: "LOW",
-      value: incidents.filter(
-        (i: any) => i.severity === "LOW"
-      ).length,
-    },
-  ];
-
-  const statusData = [
-    {
-      name: "Activos",
-      total: activeIncidents.length,
-    },
-    {
-      name: "Resueltos",
-      total: resolvedIncidents.length,
-    },
-  ];
-
   return (
 
     <main className="min-h-screen bg-[#0f172a] p-8 text-white">
@@ -320,144 +266,176 @@ export default function AdminPage() {
 
         </div>
 
-      <div className="space-y-6">
+        <div className="space-y-6">
 
-  {incidents.map((incident: any) => (
+          {incidents.map((incident: any) => (
 
-    <div
-      key={incident.id}
-      className="bg-[#111827] border border-gray-800 rounded-2xl p-6 shadow-lg"
-    >
+            <div
+              key={incident.id}
+              className="bg-[#111827] border border-gray-800 rounded-2xl p-6 shadow-lg"
+            >
 
-      <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center">
 
-        <div>
+                <div>
 
-          <h2 className="text-2xl font-bold">
-            {incident.title}
-          </h2>
+                  <h2 className="text-2xl font-bold">
+                    {incident.title}
+                  </h2>
 
-          <p className="text-gray-400 mt-2">
-            {incident.description}
-          </p>
+                  <p className="text-gray-400 mt-2">
+                    {incident.description}
+                  </p>
+
+                </div>
+
+                <span
+                  className={`px-4 py-2 rounded-xl text-sm font-bold ${
+                    incident.severity === "HIGH"
+                      ? "bg-red-600"
+                      : incident.severity === "MEDIUM"
+                      ? "bg-yellow-500 text-black"
+                      : "bg-blue-500"
+                  }`}
+                >
+                  {incident.severity}
+                </span>
+
+              </div>
+
+              <div className="mt-5 space-y-2 text-sm">
+
+                <p>
+                  <span className="text-gray-400">
+                    Estado:
+                  </span>{" "}
+                  {incident.status}
+                </p>
+
+                <p>
+                  <span className="text-gray-400">
+                    ETA:
+                  </span>{" "}
+                  {incident.estimated_resolution || "No definido"}
+                </p>
+
+                <p>
+                  <span className="text-gray-400">
+                    Contingencia:
+                  </span>{" "}
+                  {incident.workaround || "N/A"}
+                </p>
+
+              </div>
+
+              <div className="flex gap-3 mt-6">
+
+                <button
+                  onClick={() =>
+                    resolveIncident(incident.id)
+                  }
+                  className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-xl font-semibold"
+                >
+                  Resolver
+                </button>
+
+              </div>
+
+              <div className="mt-6">
+
+                <h3 className="font-bold mb-3">
+                  Timeline operativo
+                </h3>
+
+                <div className="space-y-3">
+
+                  {Array.isArray(incident.updates) &&
+                    incident.updates.map((update: any) => (
+
+                      <div
+                        key={update.id}
+                        className="bg-[#1e293b] rounded-xl p-4 border border-gray-700"
+                      >
+
+                        <div className="text-xs text-gray-400 mb-1">
+                          {update.update_type}
+                        </div>
+
+                        <div className="text-sm">
+                          {update.message}
+                        </div>
+
+                      </div>
+
+                    ))}
+
+                </div>
+
+                <div className="flex gap-3 mt-4">
+
+                  <input
+                    type="text"
+                    placeholder="Agregar actualización..."
+                    value={updateMessage}
+                    onChange={(e) =>
+                      setUpdateMessage(e.target.value)
+                    }
+                    className="flex-1 bg-[#1e293b] border border-gray-700 rounded-xl p-3"
+                  />
+
+                  <button
+                   onClick={async () => {
+
+                  const text = prompt(
+                "Escribe la actualización"
+              );
+
+              if (!text) return;
+
+            const token = localStorage.getItem(
+          "samai-token"
+        );
+
+         await fetch(
+         `https://samai-status-production.up.railway.app/incidents/${incident.id}/updates`,
+        {
+        method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+
+      body: JSON.stringify({
+        update_type: "PROGRESS",
+        message: text,
+      }),
+    }
+  );
+
+  fetchIncidents();
+
+  toast.success(
+    "Actualización publicada"
+  );
+}} 
+                     
+                    
+                    className="bg-cyan-600 hover:bg-cyan-700 px-4 rounded-xl"
+                  >
+                    Publicar
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          ))}
 
         </div>
 
-        <div>
-
-          <span
-            className={`px-4 py-2 rounded-xl text-sm font-bold ${
-              incident.severity === "HIGH"
-                ? "bg-red-600"
-                : incident.severity === "MEDIUM"
-                ? "bg-yellow-500 text-black"
-                : "bg-blue-500"
-            }`}
-          >
-            {incident.severity}
-          </span>
-
-        </div>
-
-      </div>
-
-      <div className="mt-5 space-y-2 text-sm">
-
-        <p>
-          <span className="text-gray-400">
-            Estado:
-          </span>{" "}
-          {incident.status}
-        </p>
-
-        <p>
-          <span className="text-gray-400">
-            ETA:
-          </span>{" "}
-          {incident.estimated_resolution || "No definido"}
-        </p>
-
-        <p>
-          <span className="text-gray-400">
-            Contingencia:
-          </span>{" "}
-          {incident.workaround || "N/A"}
-        </p>
-
-      </div>
-
-      <div className="flex gap-3 mt-6">
-
-        <button
-          onClick={() =>
-            resolveIncident(incident.id)
-          }
-          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-xl font-semibold"
-        >
-          Resolver
-        </button>
-
-      </div>
-
-      <div className="mt-6">
-
-  <h3 className="font-bold mb-3">
-    Timeline operativo
-  </h3>
-
-  <div className="space-y-3">
-
-    {Array.isArray(incident.updates) &&
-      incident.updates.map((update: any) => (
-
-      <div
-        key={update.id}
-        className="bg-[#1e293b] rounded-xl p-4 border border-gray-700"
-      >
-
-        <div className="text-xs text-gray-400 mb-1">
-          {update.update_type}
-        </div>
-
-        <div className="text-sm">
-          {update.message}
-        </div>
-
-      </div>
-
-    ))}
-
-  </div>
-
-  <div className="flex gap-3 mt-4">
-
-    <input
-      type="text"
-      placeholder="Agregar actualización..."
-      value={updateMessage}
-      onChange={(e) =>
-        setUpdateMessage(e.target.value)
-      }
-      className="flex-1 bg-[#1e293b] border border-gray-700 rounded-xl p-3"
-    />
-
-    <button
-      onClick={() =>
-        createUpdate(incident.id)
-      }
-      className="bg-cyan-600 hover:bg-cyan-700 px-4 rounded-xl"
-    >
-      Publicar
-    </button>
-
-  </div>
-
-</div>
-
-    </div>
-  ))}
-</div>
-      
       </div>
 
     </main>
