@@ -89,7 +89,7 @@ export default function AdminPage() {
     );
 
     const response = await fetch(
-      ""https://samai-status-production.up.railway.app/incidents/"",
+      "https://samai-status-production.up.railway.app/incidents/",
       {
         method: "POST",
 
