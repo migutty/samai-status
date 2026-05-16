@@ -53,7 +53,7 @@ export default function AdminPage() {
       incidentsData.map(async (incident: any) => {
 
         const updatesResponse = await fetch(
-          `"https://samai-status-production.up.railway.app/incidents/"/incidents/${incident.id}/updates`
+          `https://samai-status-production.up.railway.app/incidents/${incident.id}/updates`
         );
 
         const updates = await updatesResponse.json();
@@ -131,7 +131,7 @@ export default function AdminPage() {
     );
 
     const response = await fetch(
-      `"https://samai-status-production.up.railway.app/incidents/"/incidents/${id}/resolve`,
+      `https://samai-status-production.up.railway.app/incidents/${id}/resolve`,
       {
         method: "PUT",
 
@@ -160,7 +160,7 @@ export default function AdminPage() {
     );
 
     const response = await fetch(
-      `"https://samai-status-production.up.railway.app/incidents/"/incidents/${id}/updates`,
+      `https://samai-status-production.up.railway.app/incidents/${id}/updates`,
       {
         method: "POST",
 
@@ -320,6 +320,89 @@ export default function AdminPage() {
 
         </div>
 
+      <div className="space-y-6">
+
+  {incidents.map((incident: any) => (
+
+    <div
+      key={incident.id}
+      className="bg-[#111827] border border-gray-800 rounded-2xl p-6 shadow-lg"
+    >
+
+      <div className="flex justify-between items-center">
+
+        <div>
+
+          <h2 className="text-2xl font-bold">
+            {incident.title}
+          </h2>
+
+          <p className="text-gray-400 mt-2">
+            {incident.description}
+          </p>
+
+        </div>
+
+        <div>
+
+          <span
+            className={`px-4 py-2 rounded-xl text-sm font-bold ${
+              incident.severity === "HIGH"
+                ? "bg-red-600"
+                : incident.severity === "MEDIUM"
+                ? "bg-yellow-500 text-black"
+                : "bg-blue-500"
+            }`}
+          >
+            {incident.severity}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div className="mt-5 space-y-2 text-sm">
+
+        <p>
+          <span className="text-gray-400">
+            Estado:
+          </span>{" "}
+          {incident.status}
+        </p>
+
+        <p>
+          <span className="text-gray-400">
+            ETA:
+          </span>{" "}
+          {incident.estimated_resolution || "No definido"}
+        </p>
+
+        <p>
+          <span className="text-gray-400">
+            Contingencia:
+          </span>{" "}
+          {incident.workaround || "N/A"}
+        </p>
+
+      </div>
+
+      <div className="flex gap-3 mt-6">
+
+        <button
+          onClick={() =>
+            resolveIncident(incident.id)
+          }
+          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-xl font-semibold"
+        >
+          Resolver
+        </button>
+
+      </div>
+
+    </div>
+  ))}
+</div>
+      
       </div>
 
     </main>
