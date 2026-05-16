@@ -20,26 +20,23 @@ router = APIRouter(
 
 
 @router.post("/", response_model=IncidentResponse)
-def create_incident(
-    incident: IncidentCreate,
-    db: Session = Depends(get_db),
-    user: str = Depends(verify_token)
-):
+def create_incident(data: IncidentCreate, db: Session = Depends(get_db)):
+
     incident = Incident(
-    title=data.title,
-    incident_type=data.incident_type,
-    description=data.description,
-    severity=data.severity,
-    status=data.status,
-    workaround=data.workaround,
-    estimated_resolution=data.estimated_resolution
-)
+        title=data.title,
+        incident_type=data.incident_type,
+        description=data.description,
+        severity=data.severity,
+        status=data.status,
+        workaround=data.workaround,
+        estimated_resolution=data.estimated_resolution
+    )
 
-db.add(incident)
-db.commit()
-db.refresh(incident)
+    db.add(incident)
+    db.commit()
+    db.refresh(incident)
 
-return incident
+    return incident
 
 
 @router.get("/", response_model=list[IncidentResponse])
