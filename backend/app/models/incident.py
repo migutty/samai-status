@@ -7,6 +7,7 @@ from datetime import datetime
 import uuid
 
 from app.database.session import Base
+from app.models.incident_update import IncidentUpdate
 
 
 class Incident(Base):
