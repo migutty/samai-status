@@ -407,7 +407,8 @@ export default function AdminPage() {
 
   <div className="space-y-3">
 
-    {incident.updates?.map((update: any) => (
+    {Array.isArray(incident.updates) &&
+      incident.updates.map((update: any) => (
 
       <div
         key={update.id}
