@@ -1,11 +1,9 @@
-from uuid import UUID
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app.database.session import get_db
 from app.models.incident_update import IncidentUpdate
-from app.auth.security import verify_token
 from app.schemas.incident_update import (
     IncidentUpdateCreate,
     IncidentUpdateResponse
@@ -17,40 +15,41 @@ router = APIRouter(
 )
 
 
-@router.post(
-    "/{incident_id}/updates",
-    response_model=IncidentUpdateResponse
-)
+@router.post("/{incident_id}/updates")
 def create_update(
     incident_id: UUID,
-    update: IncidentUpdateCreate,
-    db: Session = Depends(get_db),
-    user: str = Depends(verify_token)
+    data: IncidentUpdateCreate,
+    db: Session = Depends(get_db)
 ):
 
-    new_update = IncidentUpdate(
+    update = IncidentUpdate(
         incident_id=incident_id,
-        update_type=update.update_type,
-        message=update.message
+        update_type=data.update_type,
+        message=data.message
     )
 
-    db.add(new_update)
+    db.add(update)
+
     db.commit()
-    db.refresh(new_update)
 
-    return new_update
+    db.refresh(update)
+
+    return update
 
 
-@router.get("/{incident_id}/updates")
+@router.get(
+    "/{incident_id}/updates",
+    response_model=list[IncidentUpdateResponse]
+)
 def get_updates(
     incident_id: UUID,
     db: Session = Depends(get_db)
 ):
 
-    updates = db.query(IncidentUpdate).filter(
+    updates = db.query(
+        IncidentUpdate
+    ).filter(
         IncidentUpdate.incident_id == incident_id
-    ).order_by(
-        IncidentUpdate.created_at.desc()
     ).all()
 
     return updates

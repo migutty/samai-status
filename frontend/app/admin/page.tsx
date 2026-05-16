@@ -399,6 +399,60 @@ export default function AdminPage() {
 
       </div>
 
+      <div className="mt-6">
+
+  <h3 className="font-bold mb-3">
+    Timeline operativo
+  </h3>
+
+  <div className="space-y-3">
+
+    {incident.updates?.map((update: any) => (
+
+      <div
+        key={update.id}
+        className="bg-[#1e293b] rounded-xl p-4 border border-gray-700"
+      >
+
+        <div className="text-xs text-gray-400 mb-1">
+          {update.update_type}
+        </div>
+
+        <div className="text-sm">
+          {update.message}
+        </div>
+
+      </div>
+
+    ))}
+
+  </div>
+
+  <div className="flex gap-3 mt-4">
+
+    <input
+      type="text"
+      placeholder="Agregar actualización..."
+      value={updateMessage}
+      onChange={(e) =>
+        setUpdateMessage(e.target.value)
+      }
+      className="flex-1 bg-[#1e293b] border border-gray-700 rounded-xl p-3"
+    />
+
+    <button
+      onClick={() =>
+        createUpdate(incident.id)
+      }
+      className="bg-cyan-600 hover:bg-cyan-700 px-4 rounded-xl"
+    >
+      Publicar
+    </button>
+
+  </div>
+
+</div>
+
     </div>
   ))}
 </div>
