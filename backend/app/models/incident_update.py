@@ -3,7 +3,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import uuid
 
-from app.database.connection import Base
+from app.database.session import Base
+from app.database.session import engine
 
 
 class IncidentUpdate(Base):
