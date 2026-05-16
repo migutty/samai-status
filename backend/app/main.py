@@ -7,7 +7,7 @@ from app.models.incident import incident
 
 
 from app.routes.incident import router as incident_router
-from app.routes.incidents import router as incident_router
+from app.routes.incident import router as incident_router
 
 app = FastAPI(
     title="SAMAI Status API",
