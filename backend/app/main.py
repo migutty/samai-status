@@ -3,10 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database.session import engine, Base
 
-from app.models.incident import Incident
-
 from app.routes.incidents import router as incident_router
 from app.routes.auth import router as auth_router
+from app.routes.incident_updates import router as updates_router
 
 app = FastAPI(
     title="SAMAI Status API",
@@ -25,6 +24,7 @@ app.add_middleware(
 
 app.include_router(incident_router)
 app.include_router(auth_router)
+app.include_router(updates_router)
 
 @app.get("/")
 def home():
